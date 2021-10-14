@@ -44,11 +44,24 @@ type CronJobSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
+	//+kubebuilder:validation:MinLength=0
+
 	// The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
 	Schedule string `json:"schedule"`
 
+	//+kubebuilder:validation:Minimum=0
+
+	// Optional deadline in seconds for starting the job if it misses scheduled
+	// time for any reason.  Missed jobs executions will be counted as failed ones.
+	// +optional
 	StartingDeadlineSeconds *int64 `json:"startingDeadlineSeconds,omitempty"`
 
+	// Specifies how to treat concurrent executions of a Job.
+	// Valid values are:
+	// - "Allow" (default): allows CronJobs to run concurrently;
+	// - "Forbid": forbids concurrent runs, skipping next run if previous run hasn't finished yet;
+	// - "Replace": cancels currently running job and replaces it with a new one
+	// +optional
 	ConcurrencyPolicy ConcurrencyPolicy `json:"concurrencyPolicy"`
 
 	// This flag tells the controller to suspend subsequent executions, it does
